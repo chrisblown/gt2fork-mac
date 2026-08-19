@@ -11,6 +11,7 @@
 #endif
 
 #include "gt2fork.h"
+#include <errno.h>
 
 DIRENTRY direntry[MAX_DIRFILES];
 
@@ -123,8 +124,7 @@ NEWPATH:
             {
                 direntry[files].name = strdup(de->d_name);
                 direntry[files].attribute = 0;
-                stat(de->d_name, &st);
-                if (st.st_mode & S_IFDIR)
+                if ((stat(de->d_name, &st) == 0) && S_ISDIR(st.st_mode))
                 {
                     direntry[files].attribute = 1;
                     files++;
@@ -152,6 +152,16 @@ NEWPATH:
             }
         }
         closedir(dir);
+    }
+    else
+    {
+        fprintf(stderr, "Can't read directory '%s': %s\n", path, strerror(errno));
+
+        /* Keep the selector usable when macOS privacy or permissions deny a
+         * directory. The parent entry lets the user navigate back out. */
+        direntry[files].name = strdup("..");
+        direntry[files].attribute = 1;
+        files++;
     }
     // Sort the filelist in a most horrible fashion
     for (c = 0; c < files; c++)
@@ -249,16 +259,19 @@ NEWPATH:
                 (mousex >= 6+10) && (mousex <= 73+10))
             {
                 filemode = 0;
-                filepos = mousey - 4 - 1 + fileview;
-                if (filepos < 0) filepos = 0;
-                if (filepos > files-1) filepos = files - 1;
-
-                if (!direntry[filepos].attribute)
-                    strcpy(name, direntry[filepos].name);
-
-                if ((!prevmouseb) && (lastclick) && (lastfile == filepos))
+                if (files > 0)
                 {
-                    goto ENTERFILE;
+                    filepos = mousey - 4 - 1 + fileview;
+                    if (filepos < 0) filepos = 0;
+                    if (filepos > files-1) filepos = files - 1;
+
+                    if (!direntry[filepos].attribute)
+                        strcpy(name, direntry[filepos].name);
+
+                    if ((!prevmouseb) && (lastclick) && (lastfile == filepos))
+                    {
+                        goto ENTERFILE;
+                    }
                 }
             }
         }
@@ -395,6 +408,11 @@ ENTERFILE:
             switch(filemode)
             {
             case 0:
+                if ((files <= 0) || (filepos < 0) || (filepos >= files) ||
+                    (direntry[filepos].name == NULL))
+                {
+                    break;
+                }
                 switch (direntry[filepos].attribute)
                 {
                 case 0:
@@ -684,4 +702,3 @@ int cmpname(char *string1, char *string2)
         if ((!char1) || (!char2)) return 0;
     }
 }
-

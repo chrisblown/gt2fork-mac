@@ -1,0 +1,36 @@
+# Native Apple Silicon macOS editor build.
+
+.DEFAULT_GOAL := editor
+
+PREFIX ?= $(abspath ../macos)/
+SUFFIX =
+SDL2_CONFIG ?= /opt/homebrew/bin/sdl2-config
+
+CC ?= clang
+CXX ?= clang++
+CFLAGS += $(shell $(SDL2_CONFIG) --cflags) -D__MACOSX_CORE__ -O3 -Wall -Iasm
+CXXFLAGS += $(CFLAGS) -DHAVE_CXX11 -std=c++11 -fpermissive
+LIBS += $(shell $(SDL2_CONFIG) --libs) \
+	-framework CoreMIDI \
+	-framework CoreAudio \
+	-framework CoreFoundation
+
+include Makefile.inc
+
+.PHONY: editor clean-editor
+
+editor: $(EXE)
+
+$(EXE): | $(PREFIX)
+
+$(PREFIX):
+	mkdir -p $@
+
+clean-editor:
+	$(RM) *.o *~
+	$(RM) asm/*.o
+	$(RM) resid/*.o
+	$(RM) residfp/*.o
+	$(RM) residfp/resample/*.o
+	$(RM) rtmidi/*.o
+	$(RM) $(EXE)
