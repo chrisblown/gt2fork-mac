@@ -61,6 +61,10 @@ The editor links dynamically to the Homebrew SDL2 compatibility library, so
 `sdl2-compat` must remain installed. Press `Alt+D` in gt2fork to select a
 CoreMIDI input device.
 
+USB MIDI input has been tested on Apple Silicon with an IK Multimedia iRig
+MIDI 2. Other class-compliant USB MIDI interfaces should also work through
+macOS CoreMIDI without an additional driver.
+
 To create a macOS application bundle:
 
 ```sh
