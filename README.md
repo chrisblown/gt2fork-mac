@@ -41,9 +41,9 @@ C64 player routines.
 
 ## Apple Silicon macOS build
 
-The editor can be built natively for Apple Silicon macOS with Homebrew's SDL2
-compatibility library. MIDI input uses the system CoreMIDI framework and does
-not require an additional MIDI package.
+The editor and its command-line utilities can be built natively for Apple
+Silicon macOS with Homebrew's SDL2 compatibility library. MIDI input uses the
+system CoreMIDI framework and does not require an additional MIDI package.
 
 ### Requirements
 
@@ -73,19 +73,31 @@ cd ..
 ./macos/gt2fork
 ```
 
-The resulting executable is written to `macos/gt2fork`. It links dynamically
-to the Homebrew SDL2 compatibility library, so `sdl2-compat` must remain
-installed. Press `Alt+D` in gt2fork to select a CoreMIDI input device.
+The resulting executables are written to the `macos` directory:
+
+- `gt2fork` - the editor
+- `ins2snd2` - convert GoatTracker instruments to sound-effect data
+- `mod2sng` - convert four-channel ProTracker MOD pattern data to a song
+- `sngspli2` - split and deduplicate patterns in three-channel songs
+- `ss2stereo` - split and deduplicate patterns in six-channel stereo songs
+
+The editor links dynamically to the Homebrew SDL2 compatibility library, so
+`sdl2-compat` must remain installed. Press `Alt+D` in gt2fork to select a
+CoreMIDI input device.
+
+To build only the editor, use:
+
+```sh
+cd src
+make -f Makefile.macos editor
+```
 
 To remove the generated editor and object files:
 
 ```sh
 cd src
-make -f Makefile.macos clean-editor
+make -f Makefile.macos clean-macos
 ```
-
-This target builds the gt2fork editor only. The optional command-line tools
-continue to use their existing platform-specific Makefiles.
 
 ## License
 

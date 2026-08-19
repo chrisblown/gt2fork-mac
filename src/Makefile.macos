@@ -1,6 +1,6 @@
 # Native Apple Silicon macOS editor build.
 
-.DEFAULT_GOAL := editor
+.DEFAULT_GOAL := all-macos
 
 PREFIX ?= $(abspath ../macos)/
 SUFFIX =
@@ -17,9 +17,15 @@ LIBS += $(shell $(SDL2_CONFIG) --libs) \
 
 include Makefile.inc
 
-.PHONY: editor clean-editor
+.PHONY: all-macos editor tools-macos clean-macos clean-editor clean-tools-macos
+
+all-macos: editor tools-macos
 
 editor: $(EXE)
+
+tools-macos: | $(PREFIX)
+	PATH="$(dir $(SDL2_CONFIG)):$$PATH" $(MAKE) -C tools all \
+		PREFIX="$(PREFIX)" SUFFIX=
 
 $(EXE): | $(PREFIX)
 
@@ -34,3 +40,9 @@ clean-editor:
 	$(RM) residfp/resample/*.o
 	$(RM) rtmidi/*.o
 	$(RM) $(EXE)
+
+clean-tools-macos:
+	PATH="$(dir $(SDL2_CONFIG)):$$PATH" $(MAKE) -C tools clean \
+		PREFIX="$(PREFIX)" SUFFIX=
+
+clean-macos: clean-editor clean-tools-macos
