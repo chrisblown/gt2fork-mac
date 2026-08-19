@@ -66,12 +66,17 @@ To create a macOS application bundle:
 ```sh
 cd src
 make -f Makefile.macos app
-open ../macos/GoatTracker2Fork.app
 ```
 
 The app target creates `macos/GoatTracker2Fork.app` with the GoatTracker icon.
 When launched from Finder, it starts in the user's home directory so the
 built-in file selector can navigate normally to Desktop and Documents.
+
+Copy or drag `macos/GoatTracker2Fork.app` into `/Applications`, then launch it
+from there. This registers the app with macOS. When it first accesses a
+protected location such as Desktop or Documents, macOS will ask whether to
+allow access; approve the prompt so the built-in file selector can use that
+folder.
 
 To build only the editor, use:
 
