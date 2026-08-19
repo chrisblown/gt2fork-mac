@@ -85,6 +85,21 @@ The editor links dynamically to the Homebrew SDL2 compatibility library, so
 `sdl2-compat` must remain installed. Press `Alt+D` in gt2fork to select a
 CoreMIDI input device.
 
+To create a locally signed macOS application bundle with the GoatTracker icon:
+
+```sh
+cd src
+make -f Makefile.macos app
+open ../macos/GoatTracker2Fork.app
+```
+
+The app target creates `macos/GoatTracker2Fork.app` and applies an ad-hoc code
+signature for local use. It does not require an Apple Developer account or
+signing certificate. A prebuilt app distributed to other people would still
+need Developer ID signing and Apple notarization to pass Gatekeeper without a
+warning. When launched from Finder, the app starts in the user's home directory
+so the built-in file selector can navigate normally to Desktop and Documents.
+
 To build only the editor, use:
 
 ```sh
