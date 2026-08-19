@@ -39,6 +39,54 @@ C64 player routines.
 - Custom palette now supports GIMP palette file format
 - On-the-fly switching between a black and a blue (C64 basic editor style) theme
 
+## Apple Silicon macOS build
+
+The editor can be built natively for Apple Silicon macOS with Homebrew's SDL2
+compatibility library. MIDI input uses the system CoreMIDI framework and does
+not require an additional MIDI package.
+
+### Requirements
+
+- Apple Silicon Mac
+- Xcode Command Line Tools
+- [Homebrew](https://brew.sh/)
+- Homebrew `sdl2-compat`
+
+Install the command-line build tools and SDL dependency:
+
+```sh
+xcode-select --install
+brew install sdl2-compat
+```
+
+If Xcode Command Line Tools are already installed, `xcode-select` will report
+that no installation is necessary.
+
+### Build and run
+
+From the repository root:
+
+```sh
+cd src
+make -f Makefile.macos -j$(sysctl -n hw.logicalcpu)
+cd ..
+./macos/gt2fork
+```
+
+The resulting executable is written to `macos/gt2fork`. It links dynamically
+to the Homebrew SDL2 compatibility library, so `sdl2-compat` must remain
+installed. Press `Alt+D` in gt2fork to select a CoreMIDI input device.
+
+To remove the generated editor and object files:
+
+```sh
+cd src
+make -f Makefile.macos clean-editor
+```
+
+This target builds the gt2fork editor only. The optional command-line tools
+continue to use their existing platform-specific Makefiles.
+
 ## License
 
 This program is free software; you can redistribute it and/or modify
