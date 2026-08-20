@@ -1,5 +1,7 @@
 # gt2fork v0.6b
 
+![gt2fork running natively on macOS](screens/gt2fork-mac.png)
+
 This is a macOS-focused fork of **GoatTracker 2.75 / 2.76 Stereo** by Jan
 Wassermann. See the [original gt2fork README](https://github.com/jansalleine/gt2fork/blob/master/README.md)
 for the project overview, features, compatibility details, credits and

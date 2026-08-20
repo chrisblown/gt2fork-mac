@@ -1,3 +1,4 @@
+.DS_Store
 *.o
 linux/custom.pal.example
 linux/gt2fork
